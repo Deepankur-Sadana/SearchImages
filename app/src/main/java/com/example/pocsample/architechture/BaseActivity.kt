@@ -1,10 +1,9 @@
-package com.example.pocsample
+package com.example.pocsample.architechture
 
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-import com.example.pocsample.architechture.DeferredEventSource
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
 import com.spotify.mobius.MobiusLoop
