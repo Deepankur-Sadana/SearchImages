@@ -41,7 +41,7 @@ object SearchImageEffectHandler {
                 return searchFollowersEffects
                     .flatMapSingle { searchImagesEffect ->
                         gitHubApi
-                            .fetchFollowers(searchImagesEffect.imageQuery,Constants.CX, Constants.API_KEP)
+                            .fetchImages(searchImagesEffect.imageQuery,Constants.CX, Constants.API_KEP)
                             .map(::mapToFollowersEvent)
                             .doOnError(Timber::e)
                             .onErrorReturn { UnableToFetchImagesEvent }

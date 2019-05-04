@@ -1,4 +1,4 @@
-package com.example.pocsample.searchImages.view
+package com.example.pocsample.searchImages
 
 import com.example.pocsample.SearchImagesEffect
 import com.example.pocsample.searchImages.SearchImagesEvent

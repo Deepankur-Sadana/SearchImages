@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface GoogleApi {
 
     @GET
-    fun fetchFollowers(
+    fun fetchImages(
         @Query("q") query :String,
         @Query("cx") cx :String,
         @Query("key") apiKey :String
