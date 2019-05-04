@@ -8,7 +8,7 @@ data class SearchQueryChangeEvent(val userName: String) : SearchImagesEvent()
 
 object SearchQueryClearedEvent : SearchImagesEvent()
 
-//object SearchImagesEvent : SearchImageEvent()
+object StartSearchingImagesEvent : SearchImagesEvent()
 
 data class ImagesFetchedEvent(val serverResponse: Response) : SearchImagesEvent()
 

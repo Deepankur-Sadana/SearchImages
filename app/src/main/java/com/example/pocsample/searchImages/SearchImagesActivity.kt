@@ -28,7 +28,7 @@ class SearchImagesActivity : BaseActivity<SearchImagesModel, SearchImagesEvent, 
             }
         })
 
-        searchButton.setOnClickListener { eventSource.notifyEvent(SearchFollowersEvent) }
+        searchButton.setOnClickListener { eventSource.notifyEvent(StartSearchingImagesEvent) }
 
         followersRecyclerView.layoutManager = LinearLayoutManager(this)
 

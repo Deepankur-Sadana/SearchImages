@@ -2,6 +2,6 @@ package com.example.pocsample
 
 sealed class SearchImagesEffect
 
-data class StartSearchingImagesEffect(
+data class FetchingImagesFromRemoteEffect(
     val imageQuery: String
 ) : SearchImagesEffect()
