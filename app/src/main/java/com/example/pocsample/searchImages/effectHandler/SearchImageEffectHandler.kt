@@ -43,7 +43,7 @@ object SearchImageEffectHandler {
                             .fetchFollowers(searchImagesEffect.imageQuery)
                             .map(::mapToFollowersEvent)
                             .doOnError(Timber::e)
-                            .onErrorReturn { mapToErrorEvent(it) }
+                            .onErrorReturn { UnableToFetchImagesEvent }
                     }
                     .subscribeOn(schedulersProvider.io)
             }
@@ -57,12 +57,4 @@ object SearchImageEffectHandler {
             response
         )
 
-    private fun mapToErrorEvent(throwable: Throwable): SearchImagesEvent =
-        UnableToFetchImagesEvent
-
-//    if (throwable is HttpException && throwable.code() == 404) {
-//            UserNotFoundEvent
-//        } else {
-//            UnableToFetchImagesEvent
-//        }
 }
