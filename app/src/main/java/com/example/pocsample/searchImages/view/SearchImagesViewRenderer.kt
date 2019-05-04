@@ -1,5 +1,6 @@
-package com.example.pocsample.searchImages
+package com.example.pocsample.searchImages.view
 
+import com.example.pocsample.searchImages.SearchImagesModel
 import com.example.pocsample.threading.AsyncOp
 
 class SearchImagesViewRenderer(

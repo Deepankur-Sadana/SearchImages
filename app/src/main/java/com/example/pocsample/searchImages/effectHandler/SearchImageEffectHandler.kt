@@ -1,5 +1,6 @@
 package com.example.pocsample.searchImages.effectHandler
 
+import com.example.pocsample.FetchingImagesFromRemoteEffect
 import com.example.pocsample.SearchImagesEffect
 import com.example.pocsample.searchImages.ImagesFetchedEvent
 import com.example.pocsample.searchImages.NoImagesFoundEvent
@@ -12,7 +13,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.redgreen.benchpress.architecture.threading.SchedulersProvider
-import retrofit2.HttpException
 import timber.log.Timber
 
 object SearchImageEffectHandler {
@@ -23,7 +23,7 @@ object SearchImageEffectHandler {
         return RxMobius
             .subtypeEffectHandler<SearchImagesEffect, SearchImagesEvent>()
             .addTransformer(
-                SearchImagesEffect::class.java,
+                FetchingImagesFromRemoteEffect::class.java,
                 makeFetchFollowersApiCall(gitHubApi, schedulersProvider)
             )
             .build()
@@ -32,17 +32,18 @@ object SearchImageEffectHandler {
     private fun makeFetchFollowersApiCall(
         gitHubApi: GoogleApi,
         schedulersProvider: SchedulersProvider
-    ): ObservableTransformer<SearchImagesEffect, SearchImagesEvent> {
-        return object : ObservableTransformer<SearchImagesEffect, SearchImagesEvent> {
+    ): ObservableTransformer<FetchingImagesFromRemoteEffect, SearchImagesEvent> {
+        return object : ObservableTransformer<FetchingImagesFromRemoteEffect, SearchImagesEvent> {
             override fun apply(
-                searchFollowersEffects: Observable<SearchImagesEffect>
+                searchFollowersEffects: Observable<FetchingImagesFromRemoteEffect>
             ): ObservableSource<SearchImagesEvent> {
                 return searchFollowersEffects
-                    .flatMapSingle { searchImagesEffect -> gitHubApi
-                        .fetchFollowers(searchImagesEffect.userName)
-                        .map(::mapToFollowersEvent)
-                        .doOnError(Timber::e)
-                        .onErrorReturn { mapToErrorEvent(it) }
+                    .flatMapSingle { searchImagesEffect ->
+                        gitHubApi
+                            .fetchFollowers(searchImagesEffect.imageQuery)
+                            .map(::mapToFollowersEvent)
+                            .doOnError(Timber::e)
+                            .onErrorReturn { mapToErrorEvent(it) }
                     }
                     .subscribeOn(schedulersProvider.io)
             }
@@ -57,9 +58,11 @@ object SearchImageEffectHandler {
         )
 
     private fun mapToErrorEvent(throwable: Throwable): SearchImagesEvent =
-        if (throwable is HttpException && throwable.code() == 404) {
-            UserNotFoundEvent
-        } else {
-            UnableToFetchImagesEvent
-        }
+        UnableToFetchImagesEvent
+
+//    if (throwable is HttpException && throwable.code() == 404) {
+//            UserNotFoundEvent
+//        } else {
+//            UnableToFetchImagesEvent
+//        }
 }

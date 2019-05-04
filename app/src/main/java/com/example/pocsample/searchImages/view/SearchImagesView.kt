@@ -1,4 +1,4 @@
-package com.example.pocsample.searchImages
+package com.example.pocsample.searchImages.view
 
 import com.example.pocsample.searchImages.data.Response
 

@@ -1,11 +1,14 @@
-package com.example.pocsample.searchImages
+package com.example.pocsample.searchImages.view
 
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
+import android.view.View
 import com.example.pocsample.R
 import com.example.pocsample.SearchImagesEffect
 import com.example.pocsample.architechture.BaseActivity
 import com.example.pocsample.architechture.TextWatcherAdapter
+import com.example.pocsample.searchImages.*
+import com.example.pocsample.searchImages.data.Response
 import com.example.pocsample.searchImages.effectHandler.SearchImageEffectHandler
 import com.example.pocsample.searchImages.http.GoogleApi
 import com.example.pocsample.threading.DefaultSchedulersProvider
@@ -26,7 +29,8 @@ class SearchImagesActivity : BaseActivity<SearchImagesModel, SearchImagesEvent, 
         SearchImagesViewRenderer(this)
     }
 
-
+//https://www.googleapis.com/customsearch/v1?
+// q=harrypotter&cx=011476162607576381860:ra4vmliv9ti&key=AIzaSyCjp0DYfdhyfgoroAx8UogSLfk1FlfV1eM
 
     private val googgleApi by lazy(LazyThreadSafetyMode.NONE) {
         val okHttpClient = OkHttpClient
@@ -39,7 +43,7 @@ class SearchImagesActivity : BaseActivity<SearchImagesModel, SearchImagesEvent, 
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(DefaultSchedulersProvider().io))
-            .baseUrl("https://api.github.com/")
+            .baseUrl("https://www.googleapis.com/customsearch/v1")
             .build()
             .create(GoogleApi::class.java)
     }
@@ -62,7 +66,7 @@ class SearchImagesActivity : BaseActivity<SearchImagesModel, SearchImagesEvent, 
 
         searchButton.setOnClickListener { eventSource.notifyEvent(StartSearchingImagesEvent) }
 
-        followersRecyclerView.layoutManager = LinearLayoutManager(this)
+        imagesRecyclerView.layoutManager = LinearLayoutManager(this)
 
         retryButton.setOnClickListener { eventSource.notifyEvent(RetryFetchImagesEvent) }
     }
@@ -73,7 +77,8 @@ class SearchImagesActivity : BaseActivity<SearchImagesModel, SearchImagesEvent, 
     override fun updateFunction(
         model: SearchImagesModel,
         event: SearchImagesEvent
-    ): Next<SearchImagesModel, SearchImagesEffect> = SearchImagesLogic.update(model,event)
+    ): Next<SearchImagesModel, SearchImagesEffect> =
+        SearchImagesLogic.update(model, event)
 
 
 
@@ -84,6 +89,59 @@ class SearchImagesActivity : BaseActivity<SearchImagesModel, SearchImagesEvent, 
 
     override fun effectHandler(): ObservableTransformer<SearchImagesEffect, SearchImagesEvent> {
         return SearchImageEffectHandler.create(googgleApi, DefaultSchedulersProvider())
+    }
+
+
+    override fun disableSearchButton() {
+        searchButton.isEnabled = false
+    }
+
+    override fun showBlankMessage() {
+        messageTextView.text = "Search photoes here)"
+    }
+
+    override fun enableSearchButton() {
+        searchButton.isEnabled = true
+    }
+
+    override fun showLoading() {
+        fetchingImagesProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun disableSearchImagesField() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideImages() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideNoImagesMessage() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideImageNotFoundMessage() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideRetryMessage() {
+        messageTextView.visibility = View.INVISIBLE
+        retryButton.visibility = View.GONE
+    }
+
+    override fun enableSearchField() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showImages(response: Response) {
+        with(imagesRecyclerView) {
+            visibility = View.VISIBLE
+            adapter = ImagesAdapter(response.items)
+        }
     }
 
 }
