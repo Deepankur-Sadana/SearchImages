@@ -16,6 +16,7 @@ data class SearchImagesModel (
     val serverResponse: Response?
 ) : Parcelable {
 
+
     companion object {
         val BLANK = SearchImagesModel(
             searchFollowersAsyncOp = AsyncOp.IDLE,
@@ -24,6 +25,11 @@ data class SearchImagesModel (
             serverResponse = null
         )
     }
+
+
+    val isReadyToSearch: Boolean
+        get() = searchQuery.isValid()
+
 
     fun searchQueryChanged(query: String): SearchImagesModel = copy(searchQuery = SearchQuery(query))
 
