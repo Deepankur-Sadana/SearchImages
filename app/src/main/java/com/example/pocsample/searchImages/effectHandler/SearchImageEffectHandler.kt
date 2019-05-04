@@ -1,5 +1,6 @@
 package com.example.pocsample.searchImages.effectHandler
 
+import com.example.pocsample.Constants
 import com.example.pocsample.FetchingImagesFromRemoteEffect
 import com.example.pocsample.SearchImagesEffect
 import com.example.pocsample.searchImages.ImagesFetchedEvent
@@ -40,7 +41,7 @@ object SearchImageEffectHandler {
                 return searchFollowersEffects
                     .flatMapSingle { searchImagesEffect ->
                         gitHubApi
-                            .fetchFollowers(searchImagesEffect.imageQuery)
+                            .fetchFollowers(searchImagesEffect.imageQuery,Constants.CX, Constants.API_KEP)
                             .map(::mapToFollowersEvent)
                             .doOnError(Timber::e)
                             .onErrorReturn { UnableToFetchImagesEvent }
